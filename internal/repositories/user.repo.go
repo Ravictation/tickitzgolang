@@ -3,7 +3,7 @@ package repositories
 import (
 	"errors"
 
-	"github.com/Ravictation/golang_backend_coffeeshop/internal/models"
+	"github.com/Ravictation/tickitzgolang/internal/models"
 
 	"github.com/jmoiron/sqlx"
 )

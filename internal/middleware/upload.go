@@ -4,7 +4,7 @@ import (
 	"fmt"
 	"net/http"
 
-	"github.com/Ravictation/golang_backend_coffeeshop/internal/pkg"
+	"github.com/Ravictation/tickitzgolang/internal/pkg"
 	"github.com/gin-gonic/gin"
 )
 

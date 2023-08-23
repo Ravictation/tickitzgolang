@@ -1,9 +1,9 @@
 package routers
 
 import (
-	"github.com/Ravictation/golang_backend_coffeeshop/internal/handlers"
-	"github.com/Ravictation/golang_backend_coffeeshop/internal/middleware"
-	"github.com/Ravictation/golang_backend_coffeeshop/internal/repositories"
+	"github.com/Ravictation/tickitzgolang/internal/handlers"
+	"github.com/Ravictation/tickitzgolang/internal/middleware"
+	"github.com/Ravictation/tickitzgolang/internal/repositories"
 
 	"github.com/gin-gonic/gin"
 	"github.com/jmoiron/sqlx"

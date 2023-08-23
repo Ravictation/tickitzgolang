@@ -3,8 +3,8 @@ package middleware
 import (
 	"strings"
 
-	"github.com/Ravictation/golang_backend_coffeeshop/config"
-	"github.com/Ravictation/golang_backend_coffeeshop/internal/pkg"
+	"github.com/Ravictation/tickitzgolang/config"
+	"github.com/Ravictation/tickitzgolang/internal/pkg"
 	"github.com/gin-gonic/gin"
 )
 

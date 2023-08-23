@@ -1,7 +1,7 @@
 package pkg
 
 import (
-	"github.com/Ravictation/golang_backend_coffeeshop/config"
+	"github.com/Ravictation/tickitzgolang/config"
 
 	"github.com/gin-gonic/gin"
 )
