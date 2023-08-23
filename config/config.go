@@ -9,15 +9,17 @@ import (
 type Operation func(ctx context.Context) error
 
 type Metas struct {
-	Next  interface{} `json:"next"`
-	Prev  interface{} `json:"prev"`
-	Total int         `json:"total"`
+	Next       interface{} `json:"next"`
+	Prev       interface{} `json:"prev"`
+	Last_page  interface{} `json:"last_page"`
+	Total_data interface{} `json:"total_data"`
 }
 
 type Result struct {
-	Data    interface{}
-	Meta    interface{}
-	Message interface{}
+	Data    interface{} `json:"data"`
+	Meta    interface{} `json:"meta"`
+	Message interface{} `json:"message"`
+	Token   interface{} `jsno:"token"`
 }
 
 var CorsConfig = cors.Config{

@@ -8,6 +8,8 @@ CREATE TABLE public.movies (
 	synopsis text NOT NULL,
 	image text NOT NULL,
     cover_image text NOT NULL,
+	created_at timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
+	updated_at timestamp NULL,
 	CONSTRAINT movie_pkey PRIMARY KEY (id_movie),
 	CONSTRAINT movie_id_director_fkey FOREIGN KEY (id_director) REFERENCES public.directors(id_director)
 );

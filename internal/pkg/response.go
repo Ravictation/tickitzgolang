@@ -7,11 +7,12 @@ import (
 )
 
 type Response struct {
-	Code        int         `json:"-"`
+	Code        int         `json:"code"`
 	Status      string      `json:"status"`
 	Data        interface{} `json:"data,omitempty"`
 	Meta        interface{} `json:"meta,omitempty"`
 	Description interface{} `json:"description,omitempty"`
+	Token       interface{} `json:"token,omitempty"`
 }
 
 func (r *Response) Send(ctx *gin.Context) {
@@ -26,16 +27,17 @@ func NewRes(code int, data *config.Result) *Response {
 		Status: getStatus(code),
 	}
 
-	if respone.Code >= 400 {
-		respone.Description = data.Data
-	} else if data.Message != nil {
+	if data.Message != nil {
 		respone.Description = data.Message
-	} else {
+	}
+	if data.Data != nil {
 		respone.Data = data.Data
 	}
-
 	if data.Meta != nil {
 		respone.Meta = data.Meta
+	}
+	if data.Token != nil {
+		respone.Token = data.Token
 	}
 
 	return &respone

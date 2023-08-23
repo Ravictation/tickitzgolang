@@ -1,6 +1,8 @@
 CREATE TABLE public.casts (
 	id_cast uuid NOT NULL DEFAULT gen_random_uuid(),
 	name_cast varchar(255) NOT NULL,
+	created_at timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
+	updated_at timestamp NULL,
 	CONSTRAINT casts_pkey PRIMARY KEY (id_cast)
 );
 

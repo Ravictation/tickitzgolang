@@ -1,6 +1,8 @@
 CREATE TABLE public.directors (
 	id_director uuid NOT NULL DEFAULT gen_random_uuid(),
 	name_director varchar(255) NOT NULL,
+	created_at timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
+	updated_at timestamp NULL,
 	CONSTRAINT director_pkey PRIMARY KEY (id_director)
 );
 

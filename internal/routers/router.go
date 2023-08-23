@@ -13,5 +13,7 @@ func New(db *sqlx.DB) *gin.Engine {
 
 	user(router, db)
 	auth(router, db)
+	directors_router(router, db)
+
 	return router
 }

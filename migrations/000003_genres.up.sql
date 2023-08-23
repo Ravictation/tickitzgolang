@@ -1,6 +1,8 @@
 CREATE TABLE public.genres (
 	id_genre uuid NOT NULL DEFAULT gen_random_uuid(),
 	name_genre varchar(255) NOT NULL,
+	created_at timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
+	updated_at timestamp NULL,
 	CONSTRAINT genre_pkey PRIMARY KEY (id_genre)
 );
 
