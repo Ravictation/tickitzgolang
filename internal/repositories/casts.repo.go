@@ -10,16 +10,16 @@ import (
 	"github.com/jmoiron/sqlx"
 )
 
-type Repo_Directors struct {
+type Repo_Casts struct {
 	*sqlx.DB
 }
 
-func NewDirectors(db *sqlx.DB) *Repo_Directors {
-	return &Repo_Directors{db}
+func NewCasts(db *sqlx.DB) *Repo_Casts {
+	return &Repo_Casts{db}
 }
 
-func (r *Repo_Directors) Get_Data(data *models.Directors, page string, limit string) (*config.Result, error) {
-	directors_data := []models.Directors{}
+func (r *Repo_Casts) Get_Data(data *models.Casts, page string, limit string) (*config.Result, error) {
+	datas := []models.Casts{}
 	var metas config.Metas
 
 	var offset int = 0
@@ -67,53 +67,53 @@ func (r *Repo_Directors) Get_Data(data *models.Directors, page string, limit str
 		metas.Total_data = ""
 	}
 
-	r.Select(&directors_data, `SELECT * FROM public.directors LIMIT $1 OFFSET $2`, limit_int, offset)
-	if len(directors_data) == 0 {
+	r.Select(&datas, `SELECT * FROM public.casts LIMIT $1 OFFSET $2`, limit_int, offset)
+	if len(datas) == 0 {
 		return nil, errors.New("data not found.")
 	}
-	return &config.Result{Data: directors_data, Meta: metas}, nil
+	return &config.Result{Data: datas, Meta: metas}, nil
 }
 
-func (r *Repo_Directors) Get_Count_by_Id(id string) int {
+func (r *Repo_Casts) Get_Count_by_Id(id string) int {
 	var count_data int
-	r.Get(&count_data, "SELECT count(*) FROM public.directors WHERE id_director=$1", id)
+	r.Get(&count_data, "SELECT count(*) FROM public.casts WHERE id_cast=$1", id)
 	return count_data
 }
 
-func (r *Repo_Directors) Get_Count_Data() int {
+func (r *Repo_Casts) Get_Count_Data() int {
 	var id int
-	r.Get(&id, "SELECT count(*) FROM public.directors")
+	r.Get(&id, "SELECT count(*) FROM public.casts")
 	return id
 }
 
-func (r *Repo_Directors) Insert_Data(data *models.Directors) (string, error) {
-	query := `INSERT INTO public.directors(
-			name_director
+func (r *Repo_Casts) Insert_Data(data *models.Casts) (string, error) {
+	query := `INSERT INTO public.casts(
+			name_cast
 		)VALUES(
-			:name_director
+			:name_cast
 		);`
 	_, err := r.NamedExec(query, data)
 	if err != nil {
 		return "", err
 	}
-	return "add director data successful", nil
+	return "add cast data successful", nil
 }
-func (r *Repo_Directors) Update_Data(data *models.Directors) (string, error) {
-	query := `UPDATE public.directors SET
-			name_director=:name_director,
+func (r *Repo_Casts) Update_Data(data *models.Casts) (string, error) {
+	query := `UPDATE public.casts SET
+			name_cast=:name_cast,
 			updated_at=now()
-			WHERE id_director=:id_director;`
+			WHERE id_cast=:id_cast;`
 	_, err := r.NamedExec(query, data)
 	if err != nil {
 		return "", err
 	}
-	return "update director data successful", nil
+	return "update cast data successful", nil
 }
-func (r *Repo_Directors) Delete_Data(data *models.Directors) (string, error) {
-	query := `DELETE FROM public.directors WHERE id_director=:id_director;`
+func (r *Repo_Casts) Delete_Data(data *models.Casts) (string, error) {
+	query := `DELETE FROM public.casts WHERE id_cast=:id_cast;`
 	_, err := r.NamedExec(query, data)
 	if err != nil {
 		return "", err
 	}
-	return "delete director data successful", nil
+	return "delete cast data successful", nil
 }
