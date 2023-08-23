@@ -3,8 +3,8 @@ package main
 import (
 	"log"
 
-	"github.com/Ravictation/golang_backend_coffeeshop/internal/pkg"
-	"github.com/Ravictation/golang_backend_coffeeshop/internal/routers"
+	"github.com/Ravictation/tickitzgolang/internal/pkg"
+	"github.com/Ravictation/tickitzgolang/internal/routers"
 	"github.com/asaskevich/govalidator"
 	"github.com/spf13/viper"
 
