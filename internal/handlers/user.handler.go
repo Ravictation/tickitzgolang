@@ -24,7 +24,6 @@ func (h *HandlerUser) PostData(ctx *gin.Context) {
 	user := models.User{
 		Role: "user",
 	}
-	user.Image_user = ctx.MustGet("image").(string)
 	if err := ctx.ShouldBind(&user); err != nil {
 		ctx.AbortWithError(http.StatusBadRequest, err)
 		return

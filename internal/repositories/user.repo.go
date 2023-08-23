@@ -18,19 +18,13 @@ func NewUser(db *sqlx.DB) *RepoUser {
 
 func (r *RepoUser) CreateUser(data *models.User) (string, error) {
 	query := `INSERT INTO public.user ( 
-				username,
-				email_user, 
-				password, 
-				phone_number,
-				role,
-				image_user) 
+				email, 
+				password,
+				role) 
 				VALUES(
-					:username,
-					:email_user,
-					:password, 
-					:phone_number,
+					:email,
+					:password,
 					:role,
-					:image_user
 				);`
 
 	_, err := r.NamedExec(query, data)
@@ -47,7 +41,7 @@ func (r *RepoUser) UpdateUser(data *models.User) (string, error) {
 				image_user = COALESCE(NULLIF(:image_user, ''), image_user),
 				phone_number = COALESCE(NULLIF(:phone_number, ''), phone_number),
 				updated_at = now()
-			WHERE username = :username`
+			WHERE email = :email`
 
 	_, err := r.NamedExec(query, data)
 	if err != nil {
@@ -93,7 +87,7 @@ func (r *RepoUser) DeleteUser(data *models.User) (string, error) {
 
 func (r *RepoUser) GetAuthData(user string) (*models.User, error) {
 	var result models.User
-	q := `SELECT id_user, username, "role", "password" FROM public."user" WHERE username = ?`
+	q := `SELECT id_user, username, "role", "password" FROM public."user" WHERE email = ?`
 
 	if err := r.Get(&result, r.Rebind(q), user); err != nil {
 		if err.Error() == "sql: no rows in result set" {
