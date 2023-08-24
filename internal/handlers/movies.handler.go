@@ -23,6 +23,7 @@ func (h *Handler_Movie) Get_Movies(ctx *gin.Context) {
 	page := ctx.Query("page")
 	limit := ctx.Query("limit")
 	search := ctx.Query("search")
+	by_genre := ctx.Query("by_genre")
 	orderby := ctx.Query("order_by")
 
 	if err := ctx.ShouldBind(&movies); err != nil {
@@ -30,7 +31,7 @@ func (h *Handler_Movie) Get_Movies(ctx *gin.Context) {
 		return
 	}
 
-	response, err := h.Get_Data(&movies, page, limit, search, orderby)
+	response, err := h.Get_Data(&movies, page, limit, search, orderby, by_genre)
 	if err != nil {
 		pkg.NewRes(400, &config.Result{Message: err.Error()}).Send(ctx)
 		return

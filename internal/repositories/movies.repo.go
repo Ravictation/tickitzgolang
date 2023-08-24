@@ -20,7 +20,7 @@ func NewMovies(db *sqlx.DB) *Repo_Movies {
 	return &Repo_Movies{db}
 }
 
-func (r *Repo_Movies) Get_Data(data *models.Movies, page string, limit string, search string, orderby string) (*config.Result, error) {
+func (r *Repo_Movies) Get_Data(data *models.Movies, page string, limit string, search string, orderby string, by_genre string) (*config.Result, error) {
 	var list_movies []models.Movies
 	movies_data := models.Movies{}
 	var metas config.Metas
@@ -39,7 +39,7 @@ func (r *Repo_Movies) Get_Data(data *models.Movies, page string, limit string, s
 		offset = 0
 	}
 
-	count_data := r.Get_Count_Data(search)
+	count_data := r.Get_Count_Data(search, by_genre)
 
 	if count_data <= 0 {
 		metas.Next = ""
@@ -72,14 +72,23 @@ func (r *Repo_Movies) Get_Data(data *models.Movies, page string, limit string, s
 	if search == "" {
 		search = ""
 	} else {
-		search = fmt.Sprintf(` AND LOWER(title) like LOWER('%s')`, "%"+search+"%")
+		search = fmt.Sprintf(` AND LOWER(m.title) like LOWER('%s')`, "%"+search+"%")
 	}
+
+	join_genre := ""
+	if by_genre == "" {
+		by_genre = ""
+	} else {
+		join_genre = fmt.Sprint(` left join movies_genres mg on mg.id_movie = m.id_movie `)
+		by_genre = fmt.Sprintf(` AND mg.id_genre='%s'`, by_genre)
+	}
+
 	if orderby == "" {
 		orderby = ""
 	} else {
-		orderby = fmt.Sprintf(` ORDER BY %s`, orderby)
+		orderby = fmt.Sprintf(` ORDER BY m.%s`, orderby)
 	}
-	q := fmt.Sprintf(`select id_movie, title, release_date, duration_hour, duration_minute, synopsis, image, cover_image, created_at, updated_at from public.movies WHERE TRUE %s %s LIMIT %d OFFSET %d`, search, orderby, limit_int, offset)
+	q := fmt.Sprintf(`select m.id_movie, m.title, m.release_date, m.duration_hour, m.duration_minute, m.synopsis, m.image, m.cover_image, m.created_at, m.updated_at from public.movies m %s WHERE TRUE %s %s %s LIMIT %d OFFSET %d`, join_genre, by_genre, search, orderby, limit_int, offset)
 	rows, err := r.Queryx(r.Rebind(q))
 	if err != nil {
 		log.Fatalln(err)
@@ -143,14 +152,23 @@ func (r *Repo_Movies) Get_Count_by_Id(id string) int {
 	return count_data
 }
 
-func (r *Repo_Movies) Get_Count_Data(search string) int {
+func (r *Repo_Movies) Get_Count_Data(search string, by_genre string) int {
 	if search == "" {
 		search = ""
 	} else {
 		search = fmt.Sprintf(` AND LOWER(title) like LOWER('%s')`, "%"+search+"%")
 	}
+
+	join_genre := ""
+	if by_genre == "" {
+		by_genre = ""
+	} else {
+		join_genre = fmt.Sprint(` left join movies_genres mg on mg.id_movie = m.id_movie `)
+		by_genre = fmt.Sprintf(` AND mg.id_genre='%s'`, by_genre)
+	}
+
 	var id int
-	q := fmt.Sprintf(`SELECT count(*) FROM public.movies WHERE TRUE %s`, search)
+	q := fmt.Sprintf(`SELECT count(*) FROM public.movies m %s WHERE TRUE %s %s`, join_genre, search, by_genre)
 	r.Get(&id, r.Rebind(q))
 	return id
 }
