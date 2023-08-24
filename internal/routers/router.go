@@ -17,6 +17,7 @@ func New(db *sqlx.DB) *gin.Engine {
 	casts_router(router, db)
 	genres_router(router, db)
 	movies_router(router, db)
+	premiers_router(router, db)
 
 	return router
 }

@@ -6,6 +6,7 @@ import (
 	"log"
 	"math"
 	"strconv"
+	"strings"
 
 	"github.com/Ravictation/tickitzgolang/config"
 	"github.com/Ravictation/tickitzgolang/internal/models"
@@ -195,6 +196,26 @@ func (r *Repo_Movies) Insert_Data(data *models.Moviesset) (string, error) {
 			tx.MustExec("INSERT INTO public.movies_genres (id_movie, id_genre) VALUES ($1, $2);", &new_id, &data.Genres[i])
 		}
 	}
+	if data.Locations != "" {
+		arr_loc := strings.Split(strings.Replace(data.Locations, ", ", ",", -1), ",")
+		for i := range arr_loc {
+			// fmt.Println(arr_loc[i])
+			if data.Premiers[0] != "" {
+				for ii := range data.Premiers {
+					// fmt.Println(data.Premiers[ii])
+					var new_id_schedule string
+					tx.Get(&new_id_schedule, "select gen_random_uuid()")
+					tx.MustExec("INSERT INTO public.schedules (id_schedule,id_movie, id_premier,regency,price,set_date) VALUES ($1, $2,$3,$4,$5,$6);", &new_id_schedule, &new_id, data.Premiers[ii], arr_loc[i], data.Price, data.Set_date)
+					if data.Times[0] != "" {
+						for iii := range data.Times {
+							tx.MustExec("INSERT INTO public.times_schedules (id_schedule,time_schedule) VALUES ($1, $2);", &new_id_schedule, data.Times[iii])
+						}
+					}
+				}
+			}
+			// fmt.Println("")
+		}
+	}
 	tx.Commit()
 
 	return "add movie data successful", nil
@@ -211,6 +232,8 @@ func (r *Repo_Movies) Update_Data(data *models.Moviesset) (string, error) {
 
 	tx := r.MustBegin()
 	tx.NamedExec(`UPDATE public.movies SET title=:title, id_director=:id_director, release_date=:release_date, duration_hour=:duration_hour, duration_minute=:duration_minute, synopsis=:synopsis, image=:image, cover_image=:cover_image WHERE id_movie=:id_movie;`, data)
+	tx.MustExec(`DELETE FROM public.times_schedules WHERE id_schedule in (select id_schedule from public.schedules where id_movie=$1) `, &id)
+	tx.MustExec(`DELETE FROM public.schedules WHERE id_movie=$1;`, &id)
 	tx.MustExec(`DELETE FROM public.movies_casts WHERE id_movie=$1;`, &id)
 	tx.MustExec(`DELETE FROM public.movies_genres WHERE id_movie=$1;`, &id)
 	if data.Casts[0] != "" {
@@ -223,12 +246,40 @@ func (r *Repo_Movies) Update_Data(data *models.Moviesset) (string, error) {
 			tx.MustExec("INSERT INTO public.movies_genres (id_movie, id_genre) VALUES ($1, $2);", &id, &data.Genres[i])
 		}
 	}
+	if data.Locations != "" {
+		arr_loc := strings.Split(strings.Replace(data.Locations, ", ", ",", -1), ",")
+		for i := range arr_loc {
+			// fmt.Println(arr_loc[i])
+			if data.Premiers[0] != "" {
+				for ii := range data.Premiers {
+					// fmt.Println(data.Premiers[ii])
+					var new_id_schedule string
+					tx.Get(&new_id_schedule, "select gen_random_uuid()")
+					tx.MustExec("INSERT INTO public.schedules (id_schedule,id_movie, id_premier,regency,price,set_date) VALUES ($1, $2,$3,$4,$5,$6);", &new_id_schedule, &id, data.Premiers[ii], arr_loc[i], data.Price, data.Set_date)
+					if data.Times[0] != "" {
+						for iii := range data.Times {
+							tx.MustExec("INSERT INTO public.times_schedules (id_schedule,time_schedule) VALUES ($1, $2);", &new_id_schedule, data.Times[iii])
+						}
+					}
+				}
+			}
+			// fmt.Println("")
+		}
+	}
 	tx.Commit()
 
 	return "update movie data successful", nil
 }
 func (r *Repo_Movies) Delete_Data(data *models.Movies, data2 *models.Movies_Casts, data3 *models.Movies_Genres) (string, error) {
 	tx := r.MustBegin()
+	_, err4 := tx.NamedExec(`DELETE FROM public.times_schedules WHERE id_schedule in (select id_schedule from public.schedules where id_movie=:id_movie)`, data)
+	if err4 != nil {
+		return "", err4
+	}
+	_, err5 := tx.NamedExec(`DELETE FROM public.schedules WHERE id_movie=:id_movie;`, data)
+	if err5 != nil {
+		return "", err5
+	}
 	_, err1 := tx.NamedExec(`DELETE FROM public.movies_genres WHERE id_movie=:id_movie;`, data2)
 	if err1 != nil {
 		return "", err1

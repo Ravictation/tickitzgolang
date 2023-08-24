@@ -30,6 +30,11 @@ type Moviesset struct {
 	Id_director     string   `db:"id_director" json:"id_director" form:"id_director" valid:"-"`
 	Casts           []string `json:"casts" form:"casts" valid:"-"`
 	Genres          []string `json:"genres" form:"genres" valid:"-"`
+	Locations       string   `json:"locations" form:"locations" valid:"-"`
+	Price           int      `db:"price" json:"price" form:"price" valid:"-"`
+	Premiers        []string `json:"premiers" form:"premiers" valid:"-"`
+	Set_date        string   `db:"set_date" json:"set_date" form:"set_date" valid:"-"`
+	Times           []string `json:"times" form:"times" valid:"-"`
 }
 
 type Movies_Casts struct {
@@ -42,4 +47,10 @@ type Movies_Genres struct {
 	Id_movie_genre string `json:"id_movie_genre" db:"id_movie_genre"`
 	Id_movie       string `json:"id_movie" db:"id_movie"`
 	Id_genre       string `json:"id_genre" db:"id_genre"`
+}
+
+type Times_Schedules struct {
+	Id_time_schedule string `json:"id_time_schedule" db:"id_time_schedule"`
+	Id_schedule      string `json:"id_schedule" db:"id_schedule"`
+	Time_schedule    string `json:"time_schedule" db:"time_schedule"`
 }
