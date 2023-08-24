@@ -55,7 +55,7 @@ func (h *HandlerUser) PostData(ctx *gin.Context) {
 func (h *HandlerUser) UpdateData(ctx *gin.Context) {
 	var ers error
 	var user models.User
-	user.Username = ctx.Param("username")
+	user.Email_user = ctx.Param("email")
 
 	if err := ctx.ShouldBind(&user); err != nil {
 		ctx.AbortWithError(http.StatusBadRequest, err)
@@ -80,7 +80,7 @@ func (h *HandlerUser) UpdateData(ctx *gin.Context) {
 
 func (h *HandlerUser) GetDataUser(ctx *gin.Context) {
 	var user models.User
-	user.Username = ctx.Param("username")
+	user.Email_user = ctx.Param("email")
 
 	if err := ctx.ShouldBindUri(&user); err != nil {
 		ctx.AbortWithError(http.StatusBadRequest, err)
@@ -116,7 +116,7 @@ func (h *HandlerUser) GetAllData(ctx *gin.Context) {
 func (h *HandlerUser) DeleteData(ctx *gin.Context) {
 
 	var user models.User
-	user.Username = ctx.Param("username")
+	user.Email_user = ctx.Param("email_user")
 
 	response, err := h.DeleteUser(&user)
 	if err != nil {

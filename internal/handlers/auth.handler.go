@@ -8,8 +8,8 @@ import (
 )
 
 type User struct {
-	Email    string `db:"email" json:"email" form:"email"`
-	Password string `db:"password" json:"password,omitempty"`
+	Email_user string `db:"email_user" json:"email_user" form:"email_user"`
+	Password   string `db:"password" json:"password,omitempty"`
 }
 
 type HandlerAuth struct {
@@ -29,7 +29,7 @@ func (h *HandlerAuth) Login(ctx *gin.Context) {
 		return
 	}
 
-	users, err := h.GetAuthData(data.Email)
+	users, err := h.GetAuthData(data.Email_user)
 	if err != nil {
 		pkg.NewRes(401, &config.Result{
 			Data: err.Error(),

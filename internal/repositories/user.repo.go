@@ -17,14 +17,14 @@ func NewUser(db *sqlx.DB) *RepoUser {
 }
 
 func (r *RepoUser) CreateUser(data *models.User) (string, error) {
-	query := `INSERT INTO public.user ( 
-				email, 
+	query := `INSERT INTO public.users ( 
+				email_user, 
 				password,
 				role) 
 				VALUES(
-					:email,
+					:email_user,
 					:password,
-					:role,
+					:role
 				);`
 
 	_, err := r.NamedExec(query, data)
@@ -36,7 +36,7 @@ func (r *RepoUser) CreateUser(data *models.User) (string, error) {
 }
 
 func (r *RepoUser) UpdateUser(data *models.User) (string, error) {
-	query := `UPDATE public.user SET
+	query := `UPDATE public.users SET
 				password = COALESCE(NULLIF(:password, ''), password),
 				image_user = COALESCE(NULLIF(:image_user, ''), image_user),
 				phone_number = COALESCE(NULLIF(:phone_number, ''), phone_number),
@@ -54,7 +54,7 @@ func (r *RepoUser) UpdateUser(data *models.User) (string, error) {
 func (r *RepoUser) GetUser(data *models.User) (*models.User, error) {
 	query := `SELECT email_user, phone_number, image_user,role FROM public.user WHERE username=$1;`
 	var userModel models.User
-	err := r.Get(&userModel, query, data.Username)
+	err := r.Get(&userModel, query, data.Email_user)
 	if err != nil {
 		return nil, err
 	}
@@ -75,9 +75,9 @@ func (r *RepoUser) GetAllUser(data *models.User) ([]models.User, error) {
 }
 
 func (r *RepoUser) DeleteUser(data *models.User) (string, error) {
-	query := `DELETE FROM public.user WHERE username = $1;`
+	query := `DELETE FROM public.users WHERE Email = $1;`
 
-	_, err := r.Exec(query, data.Username)
+	_, err := r.Exec(query, data.Email_user)
 	if err != nil {
 		return "", err
 	}
@@ -87,7 +87,7 @@ func (r *RepoUser) DeleteUser(data *models.User) (string, error) {
 
 func (r *RepoUser) GetAuthData(user string) (*models.User, error) {
 	var result models.User
-	q := `SELECT id_user, username, "role", "password" FROM public."user" WHERE email = ?`
+	q := `SELECT id_user, email_user, "role", "password" FROM public."users" WHERE email_user = ?`
 
 	if err := r.Get(&result, r.Rebind(q), user); err != nil {
 		if err.Error() == "sql: no rows in result set" {
