@@ -38,10 +38,26 @@ func (r *RepoUser) CreateUser(data *models.User) (string, error) {
 func (r *RepoUser) UpdateUser(data *models.User) (string, error) {
 	query := `UPDATE public.users SET
 				password = COALESCE(NULLIF(:password, ''), password),
-				image_user = COALESCE(NULLIF(:image_user, ''), image_user),
+				first_name = COALESCE(NULLIF(:first_name, ''), first_name),
+				last_name = COALESCE(NULLIF(:last_name, ''), last_name),
+				email_user = COALESCE(NULLIF(:email_user, ''), email_user),
 				phone_number = COALESCE(NULLIF(:phone_number, ''), phone_number),
 				updated_at = now()
-			WHERE email = :email`
+			WHERE id_user = :id_user`
+
+	_, err := r.NamedExec(query, data)
+	if err != nil {
+		return "", err
+	}
+
+	return "1 data user has been updated", nil
+}
+
+func (r *RepoUser) UpdateImageUser(data *models.User) (string, error) {
+	query := `UPDATE public.users SET
+				image_user = COALESCE(:image_user, image_user),
+				updated_at = now()
+			WHERE id_user = :id_user`
 
 	_, err := r.NamedExec(query, data)
 	if err != nil {

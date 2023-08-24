@@ -55,7 +55,7 @@ func (h *HandlerUser) PostData(ctx *gin.Context) {
 func (h *HandlerUser) UpdateData(ctx *gin.Context) {
 	var ers error
 	var user models.User
-	user.Email_user = ctx.Param("email")
+	user.Id_user = ctx.MustGet("userId").(string)
 
 	if err := ctx.ShouldBind(&user); err != nil {
 		ctx.AbortWithError(http.StatusBadRequest, err)
@@ -68,9 +68,24 @@ func (h *HandlerUser) UpdateData(ctx *gin.Context) {
 		}).Send(ctx)
 		return
 	}
-	user.Image_user = ctx.MustGet("image").(string)
 
 	response, err := h.UpdateUser(&user)
+	if err != nil {
+		ctx.AbortWithError(http.StatusBadRequest, err)
+		return
+	}
+	pkg.NewRes(200, &config.Result{Data: response}).Send(ctx)
+}
+
+func (h *HandlerUser) UpdateImage(ctx *gin.Context) {
+	var user models.User
+	user.Id_user = ctx.MustGet("userId").(string)
+	user.Image_user = ctx.MustGet("image").(string)
+	if err := ctx.ShouldBind(&user); err != nil {
+		ctx.AbortWithError(http.StatusBadRequest, err)
+		return
+	}
+	response, err := h.UpdateImageUser(&user)
 	if err != nil {
 		ctx.AbortWithError(http.StatusBadRequest, err)
 		return

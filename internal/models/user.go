@@ -11,6 +11,8 @@ type User struct {
 	Phone_number string     `db:"phone_number" form:"phone_number" json:"phone_number" valid:"-"`
 	Image_user   string     `db:"image_user"  json:"image_user,omitempty" valid:"-"`
 	Role         string     `db:"role" form:"role" json:"role" valid:"-"`
+	First_name   string     `db:"first_name" form:"first_name" json:"first_name" valid:"-"`
+	Last_name    string     `db:"last_name" form:"last_name" json:"last_name" valid:"-"`
 	Created_at   *time.Time `db:"created_at" json:"created_at" valid:"-"`
 	Updated_at   *time.Time `db:"updated_at" json:"updated_at" valid:"-"`
 }
