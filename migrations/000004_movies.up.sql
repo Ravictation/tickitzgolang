@@ -16,13 +16,13 @@ CREATE TABLE public.movies (
 
 INSERT INTO public.movies
 (id_movie, id_director, title, release_date, duration_hour, duration_minute, synopsis, image, cover_image)
-VALUES('ff2a4960-6099-4ef2-b529-c44ce70f8328'::uuid, 'f045c26e-49d9-4e5a-9ec2-ef85bc28714b'::uuid, 'Kimetsu no Yaiba', '2019-04-06', 2, 30, 'Diceritakan ketika umat manusia diteror oleh iblis jahat yang melahap jiwa manu...', 'public\files\1688700494515-928666789_HD wallpaper_ universe space digital art dual monitors multiple display, night.jpeg', 'cover_image.jpg');
+VALUES('ff2a4960-6099-4ef2-b529-c44ce70f8328'::uuid, 'f045c26e-49d9-4e5a-9ec2-ef85bc28714b'::uuid, 'Kimetsu no Yaiba', '2019-04-06', 2, 30, 'Diceritakan ketika umat manusia diteror oleh iblis jahat yang melahap jiwa manu...', 'https://res.cloudinary.com/deaia7unw/image/upload/v1692809165/no-product-image-400x400_hrg7mo.png', 'https://res.cloudinary.com/deaia7unw/image/upload/v1692809165/no-product-image-400x400_hrg7mo.png');
 INSERT INTO public.movies
 (id_movie, id_director, title, release_date, duration_hour, duration_minute, synopsis, image, cover_image)
-VALUES('a76db5de-c628-4c0c-b897-611e3b382874'::uuid, 'f045c26e-49d9-4e5a-9ec2-ef85bc28714b'::uuid, 'Mashle', '2023-04-18', 3, 30, 'Magic and Muscles. Ini adalah dunia sihir. Keberadaan ilmu sihi...', 'public\files\1689043407509-384968993_wallpaperflare.com_wallpaper (2).jpg', 'cover_image.jpg');
+VALUES('a76db5de-c628-4c0c-b897-611e3b382874'::uuid, 'f045c26e-49d9-4e5a-9ec2-ef85bc28714b'::uuid, 'Mashle', '2023-04-18', 3, 30, 'Magic and Muscles. Ini adalah dunia sihir. Keberadaan ilmu sihi...', 'https://res.cloudinary.com/deaia7unw/image/upload/v1692809165/no-product-image-400x400_hrg7mo.png', 'https://res.cloudinary.com/deaia7unw/image/upload/v1692809165/no-product-image-400x400_hrg7mo.png');
 INSERT INTO public.movies
 (id_movie, id_director, title, release_date, duration_hour, duration_minute, synopsis, image, cover_image)
-VALUES('063e892d-e9c6-40e5-bb06-d4fb164d6b64'::uuid, '1009481f-747d-477c-8698-d0e89481a71b'::uuid, 'My Home Hero', '2023-03-31', 2, 30, 'Tetsuo Tosu, seorang pegawai biasa, menemukan putrinya, Reika, telah disik...', 'public\files\1688700494515-928666789_HD wallpaper_ universe space digital art dual monitors multiple display, night.jpeg', 'cover_image.jpg');
+VALUES('063e892d-e9c6-40e5-bb06-d4fb164d6b64'::uuid, '1009481f-747d-477c-8698-d0e89481a71b'::uuid, 'My Home Hero', '2023-03-31', 2, 30, 'Tetsuo Tosu, seorang pegawai biasa, menemukan putrinya, Reika, telah disik...', 'https://res.cloudinary.com/deaia7unw/image/upload/v1692809165/no-product-image-400x400_hrg7mo.png', 'https://res.cloudinary.com/deaia7unw/image/upload/v1692809165/no-product-image-400x400_hrg7mo.png');
 INSERT INTO public.movies
 (id_movie, id_director, title, release_date, duration_hour, duration_minute, synopsis, image, cover_image)
-VALUES('60677a43-41ee-4a92-8fbb-d8bc1c4ae770'::uuid, 'b52a8999-3b9d-455c-99b2-97605cfb4868'::uuid, 'One Piece', '1999-10-19', 2, 30, 'Gol D. Roger dikenal sebagai Raja Bajak Laut, ...', 'public\files\1688987996067-722664774_wallpaperflare.com_wallpaper (2).jpg', 'cover_image.jpg');
+VALUES('60677a43-41ee-4a92-8fbb-d8bc1c4ae770'::uuid, 'b52a8999-3b9d-455c-99b2-97605cfb4868'::uuid, 'One Piece', '1999-10-19', 2, 30, 'Gol D. Roger dikenal sebagai Raja Bajak Laut, ...', 'https://res.cloudinary.com/deaia7unw/image/upload/v1692809165/no-product-image-400x400_hrg7mo.png', 'https://res.cloudinary.com/deaia7unw/image/upload/v1692809165/no-product-image-400x400_hrg7mo.png');
