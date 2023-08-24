@@ -1,5 +1,5 @@
 CREATE TABLE public.users (
-	id_user uuid NOT NULL DEFAULT uuid_generate_v4(),
+	id_user uuid NOT NULL DEFAULT gen_random_uuid(),
 	email_user varchar(255) NULL,
 	"password" varchar(255) NOT NULL,
 	phone_number varchar(20) NULL,

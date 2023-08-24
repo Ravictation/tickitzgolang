@@ -1,1 +1,1 @@
--- DROP TABLE public.booking;
+DROP TABLE public.booking;
