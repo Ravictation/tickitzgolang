@@ -147,7 +147,7 @@ func (r *Repo_Movies) Get_Count_Data(search string) int {
 	if search == "" {
 		search = ""
 	} else {
-		search = fmt.Sprintf(` AND LOWER(name_product) like LOWER('%s')`, "%"+search+"%")
+		search = fmt.Sprintf(` AND LOWER(title) like LOWER('%s')`, "%"+search+"%")
 	}
 	var id int
 	q := fmt.Sprintf(`SELECT count(*) FROM public.movies WHERE TRUE %s`, search)
