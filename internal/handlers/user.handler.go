@@ -95,7 +95,7 @@ func (h *HandlerUser) UpdateImage(ctx *gin.Context) {
 
 func (h *HandlerUser) GetDataUser(ctx *gin.Context) {
 	var user models.User
-	user.Email_user = ctx.Param("email")
+	user.Id_user = ctx.MustGet("userId").(string)
 
 	if err := ctx.ShouldBindUri(&user); err != nil {
 		ctx.AbortWithError(http.StatusBadRequest, err)

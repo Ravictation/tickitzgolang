@@ -18,8 +18,8 @@ func user(g *gin.Engine, d *sqlx.DB) {
 	route.POST("/", handler.PostData)
 	route.PATCH("/", middleware.Authjwt("user", "admin"), handler.UpdateData)
 	route.PATCH("/image", middleware.Authjwt("user"), middleware.UploadFile("image_user"), handler.UpdateImage)
-	route.GET("/", handler.GetAllData)
+	route.GET("/", middleware.Authjwt("user", "admin"), handler.GetDataUser)
 	route.GET("/:username", middleware.Authjwt("admin"), handler.GetDataUser)
 	route.DELETE("/:username", middleware.Authjwt("admin", "user"), handler.DeleteData)
-
+	route.GET("/verify")
 }

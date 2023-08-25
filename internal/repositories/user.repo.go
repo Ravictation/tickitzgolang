@@ -68,9 +68,9 @@ func (r *RepoUser) UpdateImageUser(data *models.User) (string, error) {
 }
 
 func (r *RepoUser) GetUser(data *models.User) (*models.User, error) {
-	query := `SELECT email_user, phone_number, image_user,role FROM public.user WHERE username=$1;`
+	query := `SELECT id_user, email_user, phone_number, image_user, role, first_name, last_name FROM public.users WHERE id_user=$1;`
 	var userModel models.User
-	err := r.Get(&userModel, query, data.Email_user)
+	err := r.Get(&userModel, query, data.Id_user)
 	if err != nil {
 		return nil, err
 	}
@@ -80,7 +80,7 @@ func (r *RepoUser) GetUser(data *models.User) (*models.User, error) {
 func (r *RepoUser) GetAllUser(data *models.User) ([]models.User, error) {
 
 	var users []models.User
-	query := "SELECT username, image_user, phone_number, email_user,role FROM public.user"
+	query := "SELECT username, image_user, phone_number, email_user,role FROM public.users"
 	err := r.Select(&users, query)
 
 	if err != nil {
@@ -91,7 +91,7 @@ func (r *RepoUser) GetAllUser(data *models.User) ([]models.User, error) {
 }
 
 func (r *RepoUser) DeleteUser(data *models.User) (string, error) {
-	query := `DELETE FROM public.users WHERE Email = $1;`
+	query := `DELETE FROM public.users WHERE id_user = $1;`
 
 	_, err := r.Exec(query, data.Email_user)
 	if err != nil {
