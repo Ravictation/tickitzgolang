@@ -1,7 +1,6 @@
 package middleware
 
 import (
-	"fmt"
 	"net/http"
 
 	"github.com/Ravictation/tickitzgolang/internal/pkg"
@@ -31,7 +30,7 @@ func UploadFile(fieldName string) gin.HandlerFunc {
 		defer src.Close()
 
 		result, err := pkg.CloudInary(src)
-		fmt.Print(result)
+		// fmt.Print(result)
 		if err != nil {
 			ctx.JSON(http.StatusInternalServerError, gin.H{"error": "Failed to open file"})
 			return
@@ -65,7 +64,7 @@ func UploadFile2(fieldName string) gin.HandlerFunc {
 		defer src.Close()
 
 		result, err := pkg.CloudInary(src)
-		fmt.Print(result)
+		// fmt.Print(result)
 		if err != nil {
 			ctx.JSON(http.StatusInternalServerError, gin.H{"error": "Failed to open file"})
 			return

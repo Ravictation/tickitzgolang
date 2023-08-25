@@ -9,29 +9,26 @@ import (
 	"github.com/gin-gonic/gin"
 )
 
-type Handler_Movie struct {
-	*repositories.Repo_Movies
+type Handler_Premiers struct {
+	*repositories.Repo_Premiers
 }
 
-func NewMovies(r *repositories.Repo_Movies) *Handler_Movie {
-	return &Handler_Movie{r}
+func NewPremiers(r *repositories.Repo_Premiers) *Handler_Premiers {
+	return &Handler_Premiers{r}
 }
 
-func (h *Handler_Movie) Get_Movies(ctx *gin.Context) {
-	var movies models.Movies
+func (h *Handler_Premiers) Get_Premiers(ctx *gin.Context) {
+	var premiers models.Premiers
 
 	page := ctx.Query("page")
 	limit := ctx.Query("limit")
-	search := ctx.Query("search")
-	by_genre := ctx.Query("by_genre")
-	orderby := ctx.Query("order_by")
 
-	if err := ctx.ShouldBind(&movies); err != nil {
+	if err := ctx.ShouldBind(&premiers); err != nil {
 		pkg.NewRes(400, &config.Result{Message: err.Error()}).Send(ctx)
 		return
 	}
 
-	response, err := h.Get_Data(&movies, page, limit, search, orderby, by_genre)
+	response, err := h.Get_Data(&premiers, page, limit)
 	if err != nil {
 		pkg.NewRes(400, &config.Result{Message: err.Error()}).Send(ctx)
 		return
@@ -39,43 +36,25 @@ func (h *Handler_Movie) Get_Movies(ctx *gin.Context) {
 
 	pkg.NewRes(200, response).Send(ctx)
 }
-func (h *Handler_Movie) Get_Movies_by_Id(ctx *gin.Context) {
-	var movies models.Movies
 
-	movies.Id_movie = ctx.Param("id")
-	if err := ctx.ShouldBind(&movies); err != nil {
-		pkg.NewRes(400, &config.Result{Message: err.Error()}).Send(ctx)
-		return
-	}
+func (h *Handler_Premiers) Post_Premiers(ctx *gin.Context) {
+	var premiers models.Premiers
 
-	response, err := h.Get_Data_by_Id(&movies)
-	if err != nil {
-		pkg.NewRes(400, &config.Result{Message: err.Error()}).Send(ctx)
-		return
-	}
-
-	pkg.NewRes(200, response).Send(ctx)
-}
-func (h *Handler_Movie) Post_Movies(ctx *gin.Context) {
-	var moviesset models.Moviesset
-
-	if err := ctx.Bind(&moviesset); err != nil {
+	if err := ctx.ShouldBind(&premiers); err != nil {
 		// ctx.AbortWithError(http.StatusBadRequest, err)
 		pkg.NewRes(400, &config.Result{Message: err.Error()}).Send(ctx)
 		return
 	}
 
-	moviesset.Image = ctx.MustGet("image").(string)
-	moviesset.Cover_image = ctx.MustGet("image2").(string)
+	premiers.Image = ctx.MustGet("image").(string)
 
 	var err_val error
-	_, err_val = govalidator.ValidateStruct(&moviesset)
+	_, err_val = govalidator.ValidateStruct(&premiers)
 	if err_val != nil {
 		pkg.NewRes(400, &config.Result{Message: err_val.Error()}).Send(ctx)
 		return
 	}
-
-	response, err := h.Insert_Data(&moviesset)
+	response, err := h.Insert_Data(&premiers)
 	if err != nil {
 		// ctx.AbortWithError(http.StatusBadRequest, err)
 		pkg.NewRes(400, &config.Result{Message: err.Error()}).Send(ctx)
@@ -83,35 +62,31 @@ func (h *Handler_Movie) Post_Movies(ctx *gin.Context) {
 	}
 	pkg.NewRes(200, &config.Result{Message: response}).Send(ctx)
 }
-func (h *Handler_Movie) Put_Movies(ctx *gin.Context) {
-	var moviesset models.Moviesset
+func (h *Handler_Premiers) Put_Premiers(ctx *gin.Context) {
+	var premiers models.Premiers
+	premiers.Id_premier = ctx.Param("id")
 
-	moviesset.Id_movie = ctx.Param("id")
-
-	count_by_id := h.Get_Count_by_Id(moviesset.Id_movie)
+	count_by_id := h.Get_Count_by_Id(premiers.Id_premier)
 	if count_by_id == 0 {
 		// ctx.AbortWithError(http.StatusBadRequest, err)
 		pkg.NewRes(400, &config.Result{Message: "data not found."}).Send(ctx)
 		return
 	}
 
-	moviesset.Image = ctx.MustGet("image").(string)
-	moviesset.Cover_image = ctx.MustGet("image2").(string)
+	premiers.Image = ctx.MustGet("image").(string)
 
-	if err := ctx.ShouldBind(&moviesset); err != nil {
+	if err := ctx.ShouldBind(&premiers); err != nil {
 		// ctx.AbortWithError(http.StatusBadRequest, err)
 		pkg.NewRes(400, &config.Result{Message: err.Error()}).Send(ctx)
 		return
 	}
-
 	var err_val error
-	_, err_val = govalidator.ValidateStruct(&moviesset)
+	_, err_val = govalidator.ValidateStruct(&premiers)
 	if err_val != nil {
 		pkg.NewRes(400, &config.Result{Message: err_val.Error()}).Send(ctx)
 		return
 	}
-
-	response, err := h.Update_Data(&moviesset)
+	response, err := h.Update_Data(&premiers)
 	if err != nil {
 		// ctx.AbortWithError(http.StatusBadRequest, err)
 		pkg.NewRes(400, &config.Result{Message: err.Error()}).Send(ctx)
@@ -120,28 +95,24 @@ func (h *Handler_Movie) Put_Movies(ctx *gin.Context) {
 	pkg.NewRes(200, &config.Result{Message: response}).Send(ctx)
 }
 
-func (h *Handler_Movie) Delete_Movies(ctx *gin.Context) {
-	var movies models.Movies
-	var movies_casts models.Movies_Casts
-	var movies_genres models.Movies_Genres
-	movies.Id_movie = ctx.Param("id")
-	movies_casts.Id_movie = ctx.Param("id")
-	movies_genres.Id_movie = ctx.Param("id")
+func (h *Handler_Premiers) Delete_Premiers(ctx *gin.Context) {
+	var premiers models.Premiers
+	premiers.Id_premier = ctx.Param("id")
 
-	count_by_id := h.Get_Count_by_Id(movies.Id_movie)
+	count_by_id := h.Get_Count_by_Id(premiers.Id_premier)
 	if count_by_id == 0 {
 		// ctx.AbortWithError(http.StatusBadRequest, err)
 		pkg.NewRes(400, &config.Result{Message: "data not found."}).Send(ctx)
 		return
 	}
 
-	if err := ctx.ShouldBind(&movies); err != nil {
+	if err := ctx.ShouldBind(&premiers); err != nil {
 		// ctx.AbortWithError(http.StatusBadRequest, err)
 		pkg.NewRes(400, &config.Result{Message: err.Error()}).Send(ctx)
 		return
 	}
 
-	response, err := h.Delete_Data(&movies, &movies_casts, &movies_genres)
+	response, err := h.Delete_Data(&premiers)
 	if err != nil {
 		// ctx.AbortWithError(http.StatusBadRequest, err)
 		pkg.NewRes(400, &config.Result{Message: err.Error()}).Send(ctx)
