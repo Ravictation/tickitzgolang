@@ -182,6 +182,7 @@ func (r *Repo_Movies) Get_Data_by_Id(data *models.Movies) (*config.Result, error
 		if err != nil {
 			log.Fatalln(err)
 		}
+		movies_data.Locations = append(movies_data.Locations, "all")
 		for i := range regencys {
 			movies_data.Locations = append(movies_data.Locations, regencys[i].Regency)
 		}
@@ -191,6 +192,7 @@ func (r *Repo_Movies) Get_Data_by_Id(data *models.Movies) (*config.Result, error
 		if err != nil {
 			log.Fatalln(err)
 		}
+		movies_data.Set_dates = append(movies_data.Set_dates, "all")
 		for i := range set_dates {
 			movies_data.Set_dates = append(movies_data.Set_dates, strings.Split(set_dates[i].Set_date, "T")[0])
 		}
@@ -200,6 +202,7 @@ func (r *Repo_Movies) Get_Data_by_Id(data *models.Movies) (*config.Result, error
 		if err != nil {
 			log.Fatalln(err)
 		}
+		movies_data.Times = append(movies_data.Times, "all")
 		for i := range times {
 			movies_data.Times = append(movies_data.Times, strings.Split(strings.Split(times[i].Time_schedule, "T")[1], "Z")[0])
 		}
