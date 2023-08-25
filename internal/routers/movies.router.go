@@ -15,6 +15,7 @@ func movies_router(g *gin.Engine, d *sqlx.DB) {
 	repo := repositories.NewMovies(d)
 	handler := handlers.NewMovies(repo)
 
+	route.GET("/:id", handler.Get_Movies_by_Id)
 	route.GET("/", handler.Get_Movies)
 	route.POST("/", middleware.UploadFile("image"), middleware.UploadFile2("cover_image"), handler.Post_Movies)
 	route.PUT("/:id", middleware.UploadFile("image"), middleware.UploadFile2("cover_image"), handler.Put_Movies)

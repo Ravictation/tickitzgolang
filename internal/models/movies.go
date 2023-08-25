@@ -16,6 +16,9 @@ type Movies struct {
 	Genres          []Genres    `json:"genres" valid:"-"`
 	Created_at      *time.Time  `db:"created_at" json:"created_at" valid:"-"`
 	Updated_at      *time.Time  `db:"updated_at" json:"updated_at" valid:"-"`
+	Locations       []string    `json:"locations,omitempty" form:"locations" valid:"-"`
+	Set_dates       []string    `json:"set_dates,omitempty" form:"set_dates" valid:"-"`
+	Times           []string    `json:"times,omitempty" form:"times" valid:"-"`
 }
 
 type Moviesset struct {

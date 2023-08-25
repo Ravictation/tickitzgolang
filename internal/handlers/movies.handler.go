@@ -39,6 +39,23 @@ func (h *Handler_Movie) Get_Movies(ctx *gin.Context) {
 
 	pkg.NewRes(200, response).Send(ctx)
 }
+func (h *Handler_Movie) Get_Movies_by_Id(ctx *gin.Context) {
+	var movies models.Movies
+
+	movies.Id_movie = ctx.Param("id")
+	if err := ctx.ShouldBind(&movies); err != nil {
+		pkg.NewRes(400, &config.Result{Message: err.Error()}).Send(ctx)
+		return
+	}
+
+	response, err := h.Get_Data_by_Id(&movies)
+	if err != nil {
+		pkg.NewRes(400, &config.Result{Message: err.Error()}).Send(ctx)
+		return
+	}
+
+	pkg.NewRes(200, response).Send(ctx)
+}
 func (h *Handler_Movie) Post_Movies(ctx *gin.Context) {
 	var moviesset models.Moviesset
 

@@ -17,6 +17,18 @@ type Repo_Movies struct {
 	*sqlx.DB
 }
 
+type Regencys struct {
+	Regency string `db:"regency" json:"regency"`
+}
+
+type Set_dates struct {
+	Set_date string `db:"set_date" json:"set_date"`
+}
+
+type Times struct {
+	Time_schedule string `db:"time_schedule" json:"time_schedule"`
+}
+
 func NewMovies(db *sqlx.DB) *Repo_Movies {
 	return &Repo_Movies{db}
 }
@@ -102,6 +114,7 @@ func (r *Repo_Movies) Get_Data(data *models.Movies, page string, limit string, s
 		if err != nil {
 			log.Fatalln(err)
 		}
+		movies_data.Release_date = &strings.Split(*movies_data.Release_date, "T")[0]
 		rows, _ := r.Queryx("select c.* from movies_casts mc left join casts c on mc.id_cast = c.id_cast where mc.id_movie = $1", movies_data.Id_movie)
 		for rows.Next() {
 			var movies_casts models.Casts
@@ -145,6 +158,95 @@ func (r *Repo_Movies) Get_Data(data *models.Movies, page string, limit string, s
 		return nil, errors.New("data not found.")
 	}
 	return &config.Result{Data: list_movies, Meta: metas}, nil
+}
+
+func (r *Repo_Movies) Get_Data_by_Id(data *models.Movies) (*config.Result, error) {
+	var list_movies []models.Movies
+	movies_data := models.Movies{}
+	q := fmt.Sprintf(`select m.id_movie, m.title, m.release_date, m.duration_hour, m.duration_minute, m.synopsis, m.image, m.cover_image, m.created_at, m.updated_at from public.movies m WHERE m.id_movie='%s'`, data.Id_movie)
+	rows, err := r.Queryx(r.Rebind(q))
+	if err != nil {
+		log.Fatalln(err)
+	}
+	for rows.Next() {
+		var list_movies_casts []models.Casts
+		var list_movies_genres []models.Genres
+		var list_movies_directors []models.Directors
+		err := rows.StructScan(&movies_data)
+		if err != nil {
+			log.Fatalln(err)
+		}
+		movies_data.Release_date = &strings.Split(*movies_data.Release_date, "T")[0]
+		regencys := []Regencys{}
+		err = r.Select(&regencys, "select distinct regency from schedules s where s.id_movie =$1", movies_data.Id_movie)
+		if err != nil {
+			log.Fatalln(err)
+		}
+		for i := range regencys {
+			movies_data.Locations = append(movies_data.Locations, regencys[i].Regency)
+		}
+
+		set_dates := []Set_dates{}
+		err = r.Select(&set_dates, "select distinct set_date from schedules s where s.id_movie =$1", movies_data.Id_movie)
+		if err != nil {
+			log.Fatalln(err)
+		}
+		for i := range set_dates {
+			movies_data.Set_dates = append(movies_data.Set_dates, strings.Split(set_dates[i].Set_date, "T")[0])
+		}
+
+		times := []Times{}
+		err = r.Select(&times, "select distinct time_schedule from times_schedules ts left join schedules s on ts.id_schedule =s.id_schedule where s.id_movie =$1", movies_data.Id_movie)
+		if err != nil {
+			log.Fatalln(err)
+		}
+		for i := range times {
+			movies_data.Times = append(movies_data.Times, strings.Split(strings.Split(times[i].Time_schedule, "T")[1], "Z")[0])
+		}
+
+		rows, _ := r.Queryx("select c.* from movies_casts mc left join casts c on mc.id_cast = c.id_cast where mc.id_movie = $1", movies_data.Id_movie)
+		for rows.Next() {
+			var movies_casts models.Casts
+			err := rows.Scan(&movies_casts.Id_cast, &movies_casts.Name_cast, &movies_casts.Created_at, &movies_casts.Updated_at)
+			if err != nil {
+				log.Fatalln(err)
+			}
+			// fmt.Println(movies_casts)
+			list_movies_casts = append(list_movies_casts, movies_casts)
+		}
+		rows1, _ := r.Queryx("select g.* from movies_genres mg left join genres g on mg.id_genre=g.id_genre  where mg.id_movie=$1", movies_data.Id_movie)
+		for rows1.Next() {
+			var movies_genres models.Genres
+			err1 := rows1.Scan(&movies_genres.Id_genre, &movies_genres.Name_genre, &movies_genres.Created_at, &movies_genres.Updated_at)
+			if err1 != nil {
+				log.Fatalln(err1)
+			}
+			// fmt.Println(movies_genres)
+			list_movies_genres = append(list_movies_genres, movies_genres)
+		}
+		rows2, _ := r.Queryx("select d.* from movies m left join directors d on m.id_director=d.id_director where m.id_movie=$1", movies_data.Id_movie)
+		for rows2.Next() {
+			var movies_directors models.Directors
+			err2 := rows2.Scan(&movies_directors.Id_director, &movies_directors.Name_director, &movies_directors.Created_at, &movies_directors.Updated_at)
+			if err2 != nil {
+				log.Fatalln(err2)
+			}
+			// fmt.Println(movies_genres)
+			list_movies_directors = append(list_movies_directors, movies_directors)
+		}
+
+		movies_data.Casts = list_movies_casts
+		movies_data.Genres = list_movies_genres
+		movies_data.Directors = list_movies_directors
+
+		// fmt.Println(movies_data)
+		list_movies = append(list_movies, movies_data)
+	}
+	rows.Close()
+	if len(list_movies) == 0 {
+		return nil, errors.New("data not found.")
+	}
+	return &config.Result{Data: list_movies}, nil
 }
 
 func (r *Repo_Movies) Get_Count_by_Id(id string) int {
