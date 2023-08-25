@@ -5,7 +5,7 @@ CREATE TABLE public.users (
 	phone_number varchar(20) NULL,
 	created_at timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
 	updated_at timestamp NULL,
-	image_user varchar(255) NULL,
+	image_user text NULL,
 	"role" varchar(50) NULL,
 	first_name varchar NULL,
 	last_name varchar NULL,

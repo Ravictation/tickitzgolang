@@ -34,3 +34,5 @@ func main() {
 		log.Fatal(err)
 	}
 }
+
+// migrate -path ./migrations -database "postgresql://tickitz:tickitzgolang@localhost/tickitz?port=5432&sslmode=disable&search_path=public" -verbose up

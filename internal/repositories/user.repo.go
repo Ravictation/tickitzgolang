@@ -23,10 +23,12 @@ func (r *RepoUser) CreateUser(data *models.User) (string, error) {
 	query := `INSERT INTO public.users ( 
 				email_user, 
 				password,
+				image_user,
 				role) 
 				VALUES(
 					:email_user,
 					:password,
+					:image_user,
 					:role
 				);`
 
