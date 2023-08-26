@@ -21,7 +21,7 @@ func NewBookings(db *sqlx.DB) *Repo_Bookings {
 	return &Repo_Bookings{db}
 }
 
-func (r *Repo_Bookings) Get_Data(data *models.Bookings, page string, limit string, user string, time_schedule string) (*config.Result, error) {
+func (r *Repo_Bookings) Get_Data(data *models.Bookings, page string, limit string, user string, time_schedule string, id_booking string) (*config.Result, error) {
 	datas := []models.Bookings{}
 	var metas config.Metas
 
@@ -40,7 +40,7 @@ func (r *Repo_Bookings) Get_Data(data *models.Bookings, page string, limit strin
 		offset = 0
 	}
 
-	count_data := r.Get_Count_Data(user, time_schedule)
+	count_data := r.Get_Count_Data(user, time_schedule, id_booking)
 
 	if count_data <= 0 {
 		metas.Next = ""
@@ -76,13 +76,19 @@ func (r *Repo_Bookings) Get_Data(data *models.Bookings, page string, limit strin
 		time_schedule = fmt.Sprintf(` AND id_time_schedule='%s'`, time_schedule)
 	}
 
+	if id_booking == "" {
+		id_booking = ""
+	} else {
+		id_booking = fmt.Sprintf(` AND id_booking='%s'`, id_booking)
+	}
+
 	if user == "" {
 		user = ""
 	} else {
 		user = fmt.Sprintf(` AND id_user='%s'`, user)
 	}
 
-	q := fmt.Sprintf(`SELECT * FROM public.bookings WHERE TRUE %s %s LIMIT %d OFFSET %d`, user, time_schedule, limit_int, offset)
+	q := fmt.Sprintf(`SELECT * FROM public.bookings WHERE TRUE %s %s %s LIMIT %d OFFSET %d`, user, time_schedule, id_booking, limit_int, offset)
 
 	r.Select(&datas, r.Rebind(q))
 	if len(datas) == 0 {
@@ -148,7 +154,7 @@ func (r *Repo_Bookings) Get_Price(id string) int {
 	return price
 }
 
-func (r *Repo_Bookings) Get_Count_Data(user string, time_schedule string) int {
+func (r *Repo_Bookings) Get_Count_Data(user string, time_schedule string, id_booking string) int {
 	var id int
 
 	if user == "" {
@@ -162,8 +168,13 @@ func (r *Repo_Bookings) Get_Count_Data(user string, time_schedule string) int {
 	} else {
 		time_schedule = fmt.Sprintf(` AND id_time_schedule='%s'`, time_schedule)
 	}
+	if id_booking == "" {
+		id_booking = ""
+	} else {
+		id_booking = fmt.Sprintf(` AND id_booking='%s'`, id_booking)
+	}
 
-	q := fmt.Sprintf(`SELECT count(*) FROM public.bookings WHERE TRUE %s %s`, time_schedule, user)
+	q := fmt.Sprintf(`SELECT count(*) FROM public.bookings WHERE TRUE %s %s %s`, time_schedule, user, id_booking)
 	r.Get(&id, r.Rebind(q))
 	return id
 }

@@ -23,6 +23,7 @@ func (h *Handler_Bookings) Get_Bookings(ctx *gin.Context) {
 	page := ctx.Query("page")
 	limit := ctx.Query("limit")
 	time_schedule := ctx.Query("time_schedule")
+	id_booking := ctx.Query("id_booking")
 	user := ""
 
 	if err := ctx.ShouldBind(&bookings); err != nil {
@@ -30,7 +31,7 @@ func (h *Handler_Bookings) Get_Bookings(ctx *gin.Context) {
 		return
 	}
 
-	response, err := h.Get_Data(&bookings, page, limit, user, time_schedule)
+	response, err := h.Get_Data(&bookings, page, limit, user, time_schedule, id_booking)
 	if err != nil {
 		pkg.NewRes(400, &config.Result{Message: err.Error()}).Send(ctx)
 		return
@@ -45,6 +46,7 @@ func (h *Handler_Bookings) Get_Bookings_by_User(ctx *gin.Context) {
 	page := ctx.Query("page")
 	limit := ctx.Query("limit")
 	time_schedule := ctx.Query("time_schedule")
+	id_booking := ctx.Query("id_booking")
 	user := ctx.MustGet("userId").(string)
 
 	if err := ctx.ShouldBind(&bookings); err != nil {
@@ -52,7 +54,7 @@ func (h *Handler_Bookings) Get_Bookings_by_User(ctx *gin.Context) {
 		return
 	}
 
-	response, err := h.Get_Data(&bookings, page, limit, user, time_schedule)
+	response, err := h.Get_Data(&bookings, page, limit, user, time_schedule, id_booking)
 	if err != nil {
 		pkg.NewRes(400, &config.Result{Message: err.Error()}).Send(ctx)
 		return
