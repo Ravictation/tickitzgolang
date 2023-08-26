@@ -61,12 +61,17 @@ func (h *HandlerUser) UpdateData(ctx *gin.Context) {
 		ctx.AbortWithError(http.StatusBadRequest, err)
 		return
 	}
-	user.Password, ers = pkg.HashPassword(user.Password)
-	if ers != nil {
-		pkg.NewRes(401, &config.Result{
-			Data: ers.Error(),
-		}).Send(ctx)
-		return
+
+	if user.Password != "" {
+		user.Password, ers = pkg.HashPassword(user.Password)
+		if ers != nil {
+			pkg.NewRes(401, &config.Result{
+				Data: ers.Error(),
+			}).Send(ctx)
+			return
+		}
+	} else {
+		user.Password = ""
 	}
 
 	response, err := h.UpdateUser(&user)

@@ -42,7 +42,7 @@ func (r *RepoUser) CreateUser(data *models.User) (string, error) {
 
 func (r *RepoUser) UpdateUser(data *models.User) (string, error) {
 	query := `UPDATE public.users SET
-				password = COALESCE(NULLIF(:password, ''), password),
+				password = CASE WHEN :password = '' THEN password ELSE :password END,	
 				first_name = COALESCE(NULLIF(:first_name, ''), first_name),
 				last_name = COALESCE(NULLIF(:last_name, ''), last_name),
 				email_user = COALESCE(NULLIF(:email_user, ''), email_user),

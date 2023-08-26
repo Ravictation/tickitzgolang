@@ -15,14 +15,14 @@ func Authjwt(role ...string) gin.HandlerFunc {
 
 		if header = ctx.GetHeader("Authorization"); header == "" {
 			pkg.NewRes(401, &config.Result{
-				Message: "need to login first",
+				Message: "Please login",
 			}).Send(ctx)
 			return
 		}
 
 		if !strings.Contains(header, "Bearer") {
 			pkg.NewRes(401, &config.Result{
-				Message: "Invalid Header",
+				Message: "Invalid header value",
 			}).Send(ctx)
 			return
 		}
@@ -35,19 +35,22 @@ func Authjwt(role ...string) gin.HandlerFunc {
 			}).Send(ctx)
 			return
 		}
+
 		for _, r := range role {
 			if r == check.Role {
 				valid = true
 			}
 		}
+
 		if !valid {
 			pkg.NewRes(401, &config.Result{
-				Data: "No Permission To Access",
+				Data: "you not have permission to access",
 			}).Send(ctx)
 			return
 		}
+
 		ctx.Set("userId", check.Id)
 		ctx.Next()
-	}
 
+	}
 }
