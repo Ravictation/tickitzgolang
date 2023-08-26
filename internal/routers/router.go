@@ -21,6 +21,7 @@ func New(db *sqlx.DB) *gin.Engine {
 	movies_router(router, db)
 	premiers_router(router, db)
 	times_schedules_router(router, db)
+	bookings_router(router, db)
 
 	return router
 }
