@@ -33,7 +33,7 @@ func NewMovies(db *sqlx.DB) *Repo_Movies {
 	return &Repo_Movies{db}
 }
 
-func (r *Repo_Movies) Get_Data(data *models.Movies, page string, limit string, search string, orderby string, by_genre string) (*config.Result, error) {
+func (r *Repo_Movies) Get_Data(data *models.Movies, page string, limit string, search string, orderby string, by_genre string, date string) (*config.Result, error) {
 	var list_movies []models.Movies
 	movies_data := models.Movies{}
 	var metas config.Metas
@@ -52,7 +52,7 @@ func (r *Repo_Movies) Get_Data(data *models.Movies, page string, limit string, s
 		offset = 0
 	}
 
-	count_data := r.Get_Count_Data(search, by_genre)
+	count_data := r.Get_Count_Data(search, by_genre, date)
 
 	if count_data <= 0 {
 		metas.Next = ""
@@ -101,7 +101,15 @@ func (r *Repo_Movies) Get_Data(data *models.Movies, page string, limit string, s
 	} else {
 		orderby = fmt.Sprintf(` ORDER BY m.%s`, orderby)
 	}
-	q := fmt.Sprintf(`select m.id_movie, m.title, m.release_date, m.duration_hour, m.duration_minute, m.synopsis, m.image, m.cover_image, m.created_at, m.updated_at from public.movies m %s WHERE TRUE %s %s %s LIMIT %d OFFSET %d`, join_genre, by_genre, search, orderby, limit_int, offset)
+
+	if date == "" {
+		date = ""
+	} else {
+		dates := strings.Split(date, "-")
+		date = fmt.Sprintf(` AND EXTRACT(MONTH FROM m.release_date)='%s' AND EXTRACT(YEAR FROM m.release_date)='%s'`, dates[1], dates[0])
+	}
+
+	q := fmt.Sprintf(`select m.id_movie, m.title, m.release_date, m.duration_hour, m.duration_minute, m.synopsis, m.image, m.cover_image, m.created_at, m.updated_at from public.movies m %s WHERE TRUE %s %s %s %s LIMIT %d OFFSET %d`, join_genre, date, by_genre, search, orderby, limit_int, offset)
 	rows, err := r.Queryx(r.Rebind(q))
 	if err != nil {
 		log.Fatalln(err)
@@ -258,7 +266,7 @@ func (r *Repo_Movies) Get_Count_by_Id(id string) int {
 	return count_data
 }
 
-func (r *Repo_Movies) Get_Count_Data(search string, by_genre string) int {
+func (r *Repo_Movies) Get_Count_Data(search string, by_genre string, date string) int {
 	if search == "" {
 		search = ""
 	} else {
@@ -273,8 +281,16 @@ func (r *Repo_Movies) Get_Count_Data(search string, by_genre string) int {
 		by_genre = fmt.Sprintf(` AND mg.id_genre='%s'`, by_genre)
 	}
 
+	if date == "" {
+		date = ""
+	} else {
+		dates := strings.Split(date, "-")
+		date = fmt.Sprintf(` AND EXTRACT(MONTH FROM m.release_date)='%s' AND EXTRACT(YEAR FROM m.release_date)='%s'`, dates[1], dates[0])
+	}
+
 	var id int
-	q := fmt.Sprintf(`SELECT count(*) FROM public.movies m %s WHERE TRUE %s %s`, join_genre, search, by_genre)
+	q := fmt.Sprintf(`SELECT count(*) FROM public.movies m %s WHERE TRUE %s %s %s`, join_genre, search, by_genre, date)
+	fmt.Println(q)
 	r.Get(&id, r.Rebind(q))
 	return id
 }
