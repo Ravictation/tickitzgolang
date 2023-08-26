@@ -290,7 +290,6 @@ func (r *Repo_Movies) Get_Count_Data(search string, by_genre string, date string
 
 	var id int
 	q := fmt.Sprintf(`SELECT count(*) FROM public.movies m %s WHERE TRUE %s %s %s`, join_genre, search, by_genre, date)
-	fmt.Println(q)
 	r.Get(&id, r.Rebind(q))
 	return id
 }
