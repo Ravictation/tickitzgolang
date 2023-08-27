@@ -81,11 +81,11 @@ func (h *Handler_Bookings) Post_Bookings(ctx *gin.Context) {
 		return
 	}
 
-	response, err := h.Insert_Data(&bookings)
+	id, response, err := h.Insert_Data(&bookings)
 	if err != nil {
 		// ctx.AbortWithError(http.StatusBadRequest, err)
 		pkg.NewRes(400, &config.Result{Message: err.Error()}).Send(ctx)
 		return
 	}
-	pkg.NewRes(200, &config.Result{Message: response}).Send(ctx)
+	pkg.NewRes(200, &config.Result{Message: response, Data: id}).Send(ctx)
 }

@@ -92,7 +92,7 @@ func (r *Repo_Times_Schedules) Get_Data(data *models.Times_Scheduless, page stri
 		movie = fmt.Sprintf(` AND m.id_movie='%s'`, movie)
 	}
 
-	q := fmt.Sprintf(`select ts.id_time_schedule, ts.time_schedule, s.regency,s.price, s.set_date,m.id_movie,m.title,m.image as image_movie,m.release_date,p.name_premier, p.image as image_premier,p.count_row_seat,p.count_col_seat
+	q := fmt.Sprintf(`select ts.id_time_schedule,s.id_premier, ts.time_schedule, s.regency,s.price, s.set_date,m.id_movie,m.title,m.image as image_movie,m.release_date,p.name_premier, p.image as image_premier,p.count_row_seat,p.count_col_seat
 	from times_schedules ts 
 	left join schedules s on ts.id_schedule = s.id_schedule 
 	left join movies m on s.id_movie = m.id_movie

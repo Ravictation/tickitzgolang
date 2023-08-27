@@ -179,24 +179,31 @@ func (r *Repo_Bookings) Get_Count_Data(user string, time_schedule string, id_boo
 	return id
 }
 
-func (r *Repo_Bookings) Insert_Data(data *models.Bookingsset) (string, error) {
+func (r *Repo_Bookings) Insert_Data(data *models.Bookingsset) (string, string, error) {
 	price := r.Get_Price(data.Id_time_schedule)
 	count_seats := len(strings.Split(strings.Replace(data.Seats, " ", "", -1), ","))
 	data.Total = price * count_seats
+	tx := r.MustBegin()
+	var new_id string
+	tx.Get(&new_id, "select gen_random_uuid()")
+	data.Id_booking = new_id
 	query := `INSERT INTO public.bookings(
+		id_booking,
 			id_user,
 			id_time_schedule,
 			seats,
 			total
 		)VALUES(
+			:id_booking,
 			:id_user,
 			:id_time_schedule,
 			:seats,
 			:total
 		);`
-	_, err := r.NamedExec(query, data)
+	_, err := tx.NamedExec(query, data)
 	if err != nil {
-		return "", err
+		return "", "", err
 	}
-	return "booking movie successful", nil
+	tx.Commit()
+	return new_id, "booking movie successful", nil
 }

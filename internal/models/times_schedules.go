@@ -10,6 +10,7 @@ type Times_Scheduless struct {
 	Title            string   `json:"title" db:"title" valid:"-"`
 	Image_movie      string   `json:"image_movie" db:"image_movie" valid:"-"`
 	Release_date     *string  `json:"release_date" db:"release_date" valid:"-"`
+	Id_premier       string   `json:"id_premier" db:"id_premier" valid:"-"`
 	Name_premier     string   `json:"name_premier" db:"name_premier" valid:"-"`
 	Image_premier    string   `json:"image_premier" db:"image_premier" valid:"-"`
 	Count_row_seat   int      `json:"count_row_seat" db:"count_row_seat" valid:"-"`
