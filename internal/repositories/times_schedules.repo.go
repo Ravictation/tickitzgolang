@@ -70,17 +70,17 @@ func (r *Repo_Times_Schedules) Get_Data(data *models.Times_Scheduless, page stri
 		metas.Total_data = ""
 	}
 
-	if location_schedule == "" {
+	if location_schedule == "" || location_schedule == "all" {
 		location_schedule = ""
 	} else {
 		location_schedule = fmt.Sprintf(` AND s.regency='%s'`, location_schedule)
 	}
-	if time == "" {
+	if time == "" || time == "all" {
 		time = ""
 	} else {
 		time = fmt.Sprintf(` AND ts.time_schedule='%s'`, time)
 	}
-	if date == "" {
+	if date == "" || date == "all" {
 		date = ""
 	} else {
 		date = fmt.Sprintf(` AND s.set_date='%s'`, date)
@@ -189,17 +189,17 @@ func (r *Repo_Times_Schedules) Get_Count_by_Id(id string) int {
 func (r *Repo_Times_Schedules) Get_Count_Data(location_schedule string, time string, date string, movie string) int {
 	var id int
 
-	if location_schedule == "" {
+	if location_schedule == "" || location_schedule == "all" {
 		location_schedule = ""
 	} else {
 		location_schedule = fmt.Sprintf(` AND s.regency='%s'`, location_schedule)
 	}
-	if time == "" {
+	if time == "" || time == "all" {
 		time = ""
 	} else {
 		time = fmt.Sprintf(` AND ts.time_schedule='%s'`, time)
 	}
-	if date == "" {
+	if date == "" || date == "all" {
 		date = ""
 	} else {
 		date = fmt.Sprintf(` AND s.set_date='%s'`, date)

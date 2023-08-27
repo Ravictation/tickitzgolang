@@ -345,7 +345,7 @@ func (r *Repo_Movies) Update_Data(data *models.Moviesset) (string, error) {
 		data.Image = "https://res.cloudinary.com/deaia7unw/image/upload/v1692809165/no-product-image-400x400_hrg7mo.png"
 	}
 	if data.Cover_image == "" {
-		data.Cover_image = "https://res.cloudinary.com/deaia7unw/image/upload/v1692809165/no-product-image-400x400_hrg7mo.png"
+		data.Cover_image = "https://res.cloudinary.com/deaia7unw/image/upload/v1693147474/2981201-sw7_yjcswa.jpg"
 	}
 	var id string
 	id = data.Id_movie
