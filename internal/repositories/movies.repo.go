@@ -352,6 +352,7 @@ func (r *Repo_Movies) Update_Data(data *models.Moviesset) (string, error) {
 
 	tx := r.MustBegin()
 	tx.NamedExec(`UPDATE public.movies SET title=:title, id_director=:id_director, release_date=:release_date, duration_hour=:duration_hour, duration_minute=:duration_minute, synopsis=:synopsis, image=:image, cover_image=:cover_image WHERE id_movie=:id_movie;`, data)
+	tx.MustExec(`delete from bookings where id_time_schedule in (select id_time_schedule  FROM public.times_schedules WHERE id_schedule in (select id_schedule from public.schedules where id_movie=$1)) `, &id)
 	tx.MustExec(`DELETE FROM public.times_schedules WHERE id_schedule in (select id_schedule from public.schedules where id_movie=$1) `, &id)
 	tx.MustExec(`DELETE FROM public.schedules WHERE id_movie=$1;`, &id)
 	tx.MustExec(`DELETE FROM public.movies_casts WHERE id_movie=$1;`, &id)
@@ -391,7 +392,13 @@ func (r *Repo_Movies) Update_Data(data *models.Moviesset) (string, error) {
 	return "update movie data successful", nil
 }
 func (r *Repo_Movies) Delete_Data(data *models.Movies, data2 *models.Movies_Casts, data3 *models.Movies_Genres) (string, error) {
+
 	tx := r.MustBegin()
+	_, err6 := tx.NamedExec(`delete from bookings where id_time_schedule in (select id_time_schedule  FROM public.times_schedules WHERE id_schedule in (select id_schedule from public.schedules where id_movie=:id_movie))`, data)
+	if err6 != nil {
+		return "", err6
+	}
+
 	_, err4 := tx.NamedExec(`DELETE FROM public.times_schedules WHERE id_schedule in (select id_schedule from public.schedules where id_movie=:id_movie)`, data)
 	if err4 != nil {
 		return "", err4
