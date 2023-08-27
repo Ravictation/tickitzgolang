@@ -21,6 +21,7 @@ func (h *Handler_Times_Schedules) Get_Times_Schedules(ctx *gin.Context) {
 
 	page := ctx.Query("page")
 	limit := ctx.Query("limit")
+	movie := ctx.Query("movie")
 	location_schedule := ctx.Query("location")
 	time := ctx.Query("time")
 	date := ctx.Query("date")
@@ -30,7 +31,7 @@ func (h *Handler_Times_Schedules) Get_Times_Schedules(ctx *gin.Context) {
 		return
 	}
 
-	response, err := h.Get_Data(&times_schedules, page, limit, location_schedule, time, date)
+	response, err := h.Get_Data(&times_schedules, page, limit, location_schedule, time, date, movie)
 	if err != nil {
 		pkg.NewRes(400, &config.Result{Message: err.Error()}).Send(ctx)
 		return

@@ -1,6 +1,8 @@
 package handlers
 
 import (
+	"fmt"
+
 	"github.com/Ravictation/tickitzgolang/config"
 	"github.com/Ravictation/tickitzgolang/internal/models"
 	"github.com/Ravictation/tickitzgolang/internal/pkg"
@@ -76,13 +78,15 @@ func (h *Handler_Movie) Post_Movies(ctx *gin.Context) {
 		return
 	}
 
-	response, err := h.Insert_Data(&moviesset)
-	if err != nil {
-		// ctx.AbortWithError(http.StatusBadRequest, err)
-		pkg.NewRes(400, &config.Result{Message: err.Error()}).Send(ctx)
-		return
-	}
-	pkg.NewRes(200, &config.Result{Message: response}).Send(ctx)
+	fmt.Println(moviesset)
+
+	// response, err := h.Insert_Data(&moviesset)
+	// if err != nil {
+	// 	// ctx.AbortWithError(http.StatusBadRequest, err)
+	// 	pkg.NewRes(400, &config.Result{Message: err.Error()}).Send(ctx)
+	// 	return
+	// }
+	// pkg.NewRes(200, &config.Result{Message: response}).Send(ctx)
 }
 func (h *Handler_Movie) Put_Movies(ctx *gin.Context) {
 	var moviesset models.Moviesset

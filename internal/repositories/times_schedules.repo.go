@@ -21,7 +21,7 @@ func NewTimesSchedules(db *sqlx.DB) *Repo_Times_Schedules {
 	return &Repo_Times_Schedules{db}
 }
 
-func (r *Repo_Times_Schedules) Get_Data(data *models.Times_Scheduless, page string, limit string, location_schedule string, time string, date string) (*config.Result, error) {
+func (r *Repo_Times_Schedules) Get_Data(data *models.Times_Scheduless, page string, limit string, location_schedule string, time string, date string, movie string) (*config.Result, error) {
 	var list_times_schedules []models.Times_Scheduless
 	times_schedules_data := models.Times_Scheduless{}
 	var metas config.Metas
@@ -40,7 +40,7 @@ func (r *Repo_Times_Schedules) Get_Data(data *models.Times_Scheduless, page stri
 		offset = 0
 	}
 
-	count_data := r.Get_Count_Data(location_schedule, time, date)
+	count_data := r.Get_Count_Data(location_schedule, time, date, movie)
 
 	if count_data <= 0 {
 		metas.Next = ""
@@ -86,11 +86,17 @@ func (r *Repo_Times_Schedules) Get_Data(data *models.Times_Scheduless, page stri
 		date = fmt.Sprintf(` AND s.set_date='%s'`, date)
 	}
 
+	if movie == "" {
+		movie = ""
+	} else {
+		movie = fmt.Sprintf(` AND m.id_movie='%s'`, movie)
+	}
+
 	q := fmt.Sprintf(`select ts.id_time_schedule, ts.time_schedule, s.regency,s.price, s.set_date,m.id_movie,m.title,m.image as image_movie,m.release_date,p.name_premier, p.image as image_premier,p.count_row_seat,p.count_col_seat
 	from times_schedules ts 
 	left join schedules s on ts.id_schedule = s.id_schedule 
 	left join movies m on s.id_movie = m.id_movie
-	left join premiers p on s.id_premier = p.id_premier WHERE TRUE %s %s %s LIMIT %d OFFSET %d`, location_schedule, time, date, limit_int, offset)
+	left join premiers p on s.id_premier = p.id_premier WHERE TRUE %s %s %s %s LIMIT %d OFFSET %d`, location_schedule, time, date, movie, limit_int, offset)
 	rows, err := r.Queryx(r.Rebind(q))
 	if err != nil {
 		log.Fatalln(err)
@@ -180,7 +186,7 @@ func (r *Repo_Times_Schedules) Get_Count_by_Id(id string) int {
 	return count_data
 }
 
-func (r *Repo_Times_Schedules) Get_Count_Data(location_schedule string, time string, date string) int {
+func (r *Repo_Times_Schedules) Get_Count_Data(location_schedule string, time string, date string, movie string) int {
 	var id int
 
 	if location_schedule == "" {
@@ -199,11 +205,17 @@ func (r *Repo_Times_Schedules) Get_Count_Data(location_schedule string, time str
 		date = fmt.Sprintf(` AND s.set_date='%s'`, date)
 	}
 
+	if movie == "" {
+		movie = ""
+	} else {
+		movie = fmt.Sprintf(` AND m.id_movie='%s'`, movie)
+	}
+
 	q := fmt.Sprintf(`select count(*) 
 	from times_schedules ts 
 	left join schedules s on ts.id_schedule = s.id_schedule 
 	left join movies m on s.id_movie = m.id_movie
-	left join premiers p on s.id_premier = p.id_premier WHERE TRUE %s %s %s`, location_schedule, time, date)
+	left join premiers p on s.id_premier = p.id_premier WHERE TRUE %s %s %s %s`, location_schedule, time, date, movie)
 	r.Get(&id, r.Rebind(q))
 	return id
 }
