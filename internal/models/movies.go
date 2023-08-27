@@ -24,20 +24,20 @@ type Movies struct {
 type Moviesset struct {
 	Id_movie        string   `db:"id_movie" form:"id_movie" json:"id_movie,omitempty" valid:"-"`
 	Title           string   `db:"title" form:"title,omitempty" json:"title,omitempty" valid:"required~title is required,type(string)~title is string"`
-	Release_date    *string  `db:"release_date" json:"release_date" form:"release_date" valid:"-"`
+	Release_date    *string  `db:"release_date" json:"release_date" form:"release_date" valid:"required"`
 	Duration_hour   int      `db:"duration_hour" json:"duration_hour" form:"duration_hour" valid:"-"`
 	Duration_minute int      `db:"duration_minute" json:"duration_minute" form:"duration_minute" valid:"-"`
-	Synopsis        string   `db:"synopsis" json:"synopsis" form:"synopsis" valid:"-"`
+	Synopsis        string   `db:"synopsis" json:"synopsis" form:"synopsis" valid:"required"`
 	Image           string   `db:"image" json:"image,omitempty" valid:"-"`
 	Cover_image     string   `db:"cover_image" json:"cover_image,omitempty" valid:"-"`
 	Id_director     string   `db:"id_director" json:"id_director" form:"id_director" valid:"-"`
 	Casts           []string `json:"casts" form:"casts" valid:"-"`
 	Genres          []string `json:"genres" form:"genres" valid:"-"`
-	Locations       string   `json:"locations" form:"locations" valid:"-"`
-	Price           int      `db:"price" json:"price" form:"price" valid:"-"`
+	Locations       string   `json:"locations" form:"locations" valid:"required"`
+	Price           int      `db:"price" json:"price" form:"price" valid:"required"`
 	Premiers        []string `json:"premiers" form:"premiers" valid:"-"`
-	Set_date        string   `db:"set_date" json:"set_date" form:"set_date" valid:"-"`
-	Times           []string `json:"times" form:"times" valid:"-"`
+	Set_date        string   `db:"set_date" json:"set_date" form:"set_date" valid:"required"`
+	Times           []string `json:"times" form:"times" valid:"required"`
 }
 
 type Movies_Casts struct {
