@@ -16,8 +16,8 @@ func premiers_router(g *gin.Engine, d *sqlx.DB) {
 	handler := handlers.NewPremiers(repo)
 
 	route.GET("/", handler.Get_Premiers)
-	route.POST("/", middleware.UploadFile("image"), handler.Post_Premiers)
-	route.PUT("/:id", middleware.UploadFile("image"), handler.Put_Premiers)
+	route.POST("/", middleware.Authjwt("user", "admin"), middleware.UploadFile("image"), handler.Post_Premiers)
+	route.PUT("/:id", middleware.Authjwt("user", "admin"), middleware.UploadFile("image"), handler.Put_Premiers)
 	route.DELETE("/:id", handler.Delete_Premiers)
 
 }

@@ -2,6 +2,7 @@ package routers
 
 import (
 	"github.com/Ravictation/tickitzgolang/internal/handlers"
+	"github.com/Ravictation/tickitzgolang/internal/middleware"
 	"github.com/Ravictation/tickitzgolang/internal/repositories"
 
 	"github.com/gin-gonic/gin"
@@ -15,8 +16,8 @@ func genres_router(g *gin.Engine, d *sqlx.DB) {
 	handler := handlers.NewGenres(repo)
 
 	route.GET("/", handler.Get_Genres)
-	route.POST("/", handler.Post_Genres)
-	route.PUT("/:id", handler.Put_Genres)
-	route.DELETE("/:id", handler.Delete_Genres)
+	route.POST("/", middleware.Authjwt("admin"), handler.Post_Genres)
+	route.PUT("/:id", middleware.Authjwt("admin"), handler.Put_Genres)
+	route.DELETE("/:id", middleware.Authjwt("admin"), handler.Delete_Genres)
 
 }

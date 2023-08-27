@@ -16,6 +16,6 @@ func bookings_router(g *gin.Engine, d *sqlx.DB) {
 	handler := handlers.NewBookings(repo)
 
 	route.GET("/user", middleware.Authjwt("user", "admin"), handler.Get_Bookings_by_User)
-	route.GET("/", handler.Get_Bookings)
+	route.GET("/", middleware.Authjwt("user", "admin"), handler.Get_Bookings)
 	route.POST("/", middleware.Authjwt("user", "admin"), handler.Post_Bookings)
 }
