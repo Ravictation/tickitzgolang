@@ -25,15 +25,29 @@ func (r *RepoUser) CreateUser(data *models.User) (string, error) {
 		data.Phone_number = ""
 	}
 
+	if data.Last_name == "" {
+		data.Last_name = ""
+	}
+
+	if data.First_name == "" {
+		data.First_name = ""
+	}
+
 	query := `INSERT INTO public.users ( 
 				email_user, 
 				password,
 				image_user,
+				phone_number,
+				first_name,
+				last_name,
 				role) 
 				VALUES(
 					:email_user,
 					:password,
 					:image_user,
+					:phone_number,
+					:first_name,
+					:last_name,
 					:role
 				);`
 

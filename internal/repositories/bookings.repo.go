@@ -7,6 +7,7 @@ import (
 	"math"
 	"strconv"
 	"strings"
+	"sync"
 
 	"github.com/Ravictation/tickitzgolang/config"
 	"github.com/Ravictation/tickitzgolang/internal/models"
@@ -179,18 +180,21 @@ func (r *Repo_Bookings) Get_Count_Data(user string, time_schedule string, id_boo
 	return id
 }
 
+func doPickid(wg *sync.WaitGroup, r Repo_Bookings) {
+	defer wg.Done()
+	values := ""
+
+	tx := r.MustBegin()
+	tx.Get(&values, "select gen_random_uuid()")
+	fmt.Println(values)
+}
+
 func (r *Repo_Bookings) Insert_Data(data *models.Bookingsset) (string, string, error) {
+
 	tx := r.MustBegin()
 	var new_id string
-	tx.Get(&new_id, "select gen_random_uuid()")
 
-	var price int
-	tx.Get(&price, `SELECT s2.price FROM public.bookings s 
-	left join times_schedules ts on s.id_time_schedule =ts.id_time_schedule 
-	left join schedules s2 on ts.id_schedule =s2.id_schedule
-	WHERE s.id_time_schedule=$1`, data.Id_time_schedule)
-	count_seats := len(strings.Split(strings.Replace(data.Seats, " ", "", -1), ","))
-	data.Total = price * count_seats
+	tx.Get(&new_id, "select gen_random_uuid()")
 
 	data.Id_booking = new_id
 	query := `INSERT INTO public.bookings(
