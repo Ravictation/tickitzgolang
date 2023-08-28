@@ -20,6 +20,11 @@ func (r *RepoUser) CreateUser(data *models.User) (string, error) {
 	if data.Image_user == "" {
 		data.Image_user = "https://res.cloudinary.com/deaia7unw/image/upload/v1691956997/s8owthmz0dlwzvstolmc.png"
 	}
+
+	if data.Phone_number == "" {
+		data.Phone_number = ""
+	}
+
 	query := `INSERT INTO public.users ( 
 				email_user, 
 				password,
