@@ -180,12 +180,18 @@ func (r *Repo_Bookings) Get_Count_Data(user string, time_schedule string, id_boo
 }
 
 func (r *Repo_Bookings) Insert_Data(data *models.Bookingsset) (string, string, error) {
-	price := r.Get_Price(data.Id_time_schedule)
-	count_seats := len(strings.Split(strings.Replace(data.Seats, " ", "", -1), ","))
-	data.Total = price * count_seats
 	tx := r.MustBegin()
 	var new_id string
 	tx.Get(&new_id, "select gen_random_uuid()")
+
+	var price int
+	tx.Get(&price, `SELECT s2.price FROM public.bookings s 
+	left join times_schedules ts on s.id_time_schedule =ts.id_time_schedule 
+	left join schedules s2 on ts.id_schedule =s2.id_schedule
+	WHERE s.id_time_schedule=$1`, data.Id_time_schedule)
+	count_seats := len(strings.Split(strings.Replace(data.Seats, " ", "", -1), ","))
+	data.Total = price * count_seats
+
 	data.Id_booking = new_id
 	query := `INSERT INTO public.bookings(
 		id_booking,
