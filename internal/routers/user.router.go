@@ -17,7 +17,7 @@ func user(g *gin.Engine, d *sqlx.DB) {
 
 	route.POST("/", handler.PostData)
 	route.PATCH("/", middleware.Authjwt("user", "admin"), handler.UpdateData)
-	route.PATCH("/image", middleware.Authjwt("user"), middleware.UploadFile("image_user"), handler.UpdateImage)
+	route.PATCH("/image", middleware.Authjwt("user", "admin"), middleware.UploadFile("image_user"), handler.UpdateImage)
 	route.GET("/", middleware.Authjwt("user", "admin"), handler.GetDataUser)
 	route.DELETE("/:username", middleware.Authjwt("admin", "user"), handler.DeleteData)
 
