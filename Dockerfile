@@ -28,3 +28,4 @@ EXPOSE 8082
 ENTRYPOINT ["tickitzgolang", "--listen"]
 
 # docker build -t ravictation/tickitzgolang .
+# docker exec 361e3f6c5e8d tickitzgolang --migrate-up / down
