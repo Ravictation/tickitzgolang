@@ -1,7 +1,7 @@
 version: '3.9'
 services:
   goback:
-    image: bukanebi/goapps:4
+    image: ravictation/tickitzgolang
     ports:
       - '8090:8082'
     networks:

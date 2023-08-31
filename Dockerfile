@@ -27,4 +27,4 @@ EXPOSE 8082
 
 ENTRYPOINT ["tickitzgolang", "--listen"]
 
-# docker build -t Ravictation/tickitzgolang .
+# docker build -t ravictation/tickitzgolang .
