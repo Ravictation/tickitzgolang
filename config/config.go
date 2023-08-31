@@ -23,7 +23,7 @@ type Result struct {
 }
 
 var CorsConfig = cors.Config{
-	AllowOrigins:     []string{"https://tickitzgolang.netlify.app", "http://127.0.0.1:3000"},
+	AllowOrigins:     []string{"https://tickitzgolang.netlify.app", "http://localhost:3000"},
 	AllowMethods:     []string{"PUT", "PATCH", "GET", "POST", "HEAD", "OPTIONS"},
 	AllowHeaders:     []string{"Origin", "Content-Type", "Authorization"},
 	AllowCredentials: true,
