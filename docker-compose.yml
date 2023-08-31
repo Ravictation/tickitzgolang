@@ -1,0 +1,21 @@
+version: '3.9'
+services:
+  goback:
+    image: bukanebi/goapps:4
+    ports:
+      - '8090:8082'
+    networks:
+      - gonet
+    environment:
+      - DB_HOST=172.18.0.2
+      - DB_NAME=webgo
+      - DB_USER=fazz
+      - DB_SCHEMA=tickitzgolang
+      - DB_PASS=abcd1234
+      - DB_PORT=5432
+      # - WHITELIST=https://glistening-taffy-bfdcf2.netlify.app,http://localhost:3000
+
+networks:
+  gonet:
+    name: devnet
+    external: true
